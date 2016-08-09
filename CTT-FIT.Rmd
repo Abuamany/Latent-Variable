@@ -1,0 +1,45 @@
+---
+title: "Statistika Kecocokan Item dan CTT"
+author: "Heru Wiryanto"
+date: "August 3, 2016"
+output: ioslides_presentation
+---
+
+## Memanggil data
+Kita panggil file datanya terlebih dahulu
+```{r}
+library(TAM)
+raw_resp <- read.csv("D1_resp.csv")
+head(raw_resp)
+```
+
+----
+## Skoring
+```{r}
+key <- c(1, 1, 4, 1, 1, 1, 1, 1, 1, 1, 3, 1, 1, 1, 1)
+scored <- sapply( seq(1,length(key)), FUN = function(ii){ 1*(raw_resp[,ii] == key[ii]) } )
+summary(scored)
+```
+
+#Ini Hasil Estimasi Iterasi dan WLE Reliabilitynya
+```{r}
+mod1 <-tam(scored)
+Abil <- tam.wle(mod1)
+print(Abil)
+```
+ctt1 <- tam.ctt(raw_resp, Abil$theta)
+
+write.csv(ctt1,"D1_ctt1.csv")
+
+
+## Hasil Perhitungan Statistika Kecocokan Item
+```{r}
+Fit <- tam.fit(mod1)
+print(Fit)
+```
+
+## Plot Expected Scored Curve
+
+```{r}
+plot(mod1, item=(1:1), export=FALSE)
+```

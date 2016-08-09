@@ -1,0 +1,25 @@
+library(foreign)
+library(eRm)
+dat <-read.spss(file.choose(), to.data.frame=T, use.value.labels=F)
+head(dat)
+data<-dat[,5:9] #Mengambil kolom data item ke 1 sd 5 padakolom 5 hingga 9
+res.rm<-RM(data)
+res.rm
+summary(res.rm)
+plotjointICC(rm.res, xlim=c(5, -5))
+plotICC(rm.res, item.subset=1:6, ask=F, empICC=list(raw="raw", empCI=list(lty="solid")))
+plotPImap(rm.res)
+PlotPWmap(rm.res)
+pp<-person.parameter(rm.res)
+pp
+logLik(pp)
+confint(pp)
+plot(pp)
+rmod<-RM(stress)
+lr <-LRtest(rmod)
+lr
+personfit(pp)
+itemfit(pp)
+pp<-person.parameter(rmod)
+plotPWmap(rmod)
+plotPWmap(rmod, imap=TRUE, pmap=TRUE, person.subset=(1:5), person.pch=16, itemCI=list())

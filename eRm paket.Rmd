@@ -1,0 +1,12 @@
+---
+title: "eRm packages"
+author: "Heru Wiryanto"
+date: "August 1, 2016"
+output: word_document
+---
+
+rm.res <- RM(stress)
+```{r}
+rm.res
+```
+

@@ -1,0 +1,132 @@
+---
+title: "IRT Polytomous Model"
+author: "Heru Wiryanto"
+date: "August 4, 2016"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Model Polytomous
+Teknik IRT politomus adalah model respons butir yang mempunyai kemungkinan jawaban lebih dari dua kategori (Wells,Hambleton, 2008). Likert termasuk sejenis ini dimana biasanya ada 5 tingkatan jawaban.  Pada model ini tidak dikenal faktor Guessing, jadi dimungkinkan hanya dengan Model 2PL saja.  Terdapat beberapa model dari Polytomous IRT yakni :
+
+-  Partial Credit Model (Rasch model)
+
+-  Partial Credit Model (1PL) (PCM)
+
+-  Generalized partial Credit Model (GPCM)
+
+-  Graded Response (GRM)
+
+Dalam kajian ini akan dgunakan analisa untuk 7 item Skala skala Engagement Karyawan sebagai berikut :
+
+-  Item1 : Pekerjaan ini menantang buat saya
+
+-  Item2 : Supervisor saya memberikan penghargaan yang membuat saya bangga
+
+-  Item3 : Jika di tempat kerja saya sering lupa waktu karena keasyikan bekerja
+
+-  Item4 : Lingkungan kerja saya sangat menyenangkan
+
+-  Item5 : Saya ppuas dengan imbalan yang didapatkan atasa hasil ekrja saya selama ini
+
+-  Item6 : Budaya kerja yang ada membantu saya untuk dapat bekerja dengan baik dan menyenangkan
+
+-  Item7 : Pekerjaan saya saat ini sangaat bermakna bagi kehidupan saya saat ini dan kelak dikemudian hari
+
+Skala pengukuran : **Sangat Setuju-Setuju-Tidak Setuju-Sangat Tidak Setuju**
+
+Dilakukan piloting kepada 1000 orang responden, hasil kalibrasinya sebagai berikut
+## KALIBRASI DENGAN PCM ATAU RASCH MODEL
+```{r, echo=FALSE}
+library(ltm)
+library(foreign)
+dataset <- read.spss("yrbsfoods1000.sav", to.data.frame=TRUE)
+attach(dataset)
+yrbsfoods1000<-na.omit(dataset)
+yrbsfoods1000.pcm<-gpcm(yrbsfoods1000,constraint="rasch")
+summary(yrbsfoods1000.pcm)
+##PETA ITEM (UTK SETIAP ITEM)
+plot(yrbsfoods1000.pcm,type=c("ICC"),item=(1))
+plot(yrbsfoods1000.pcm,type=c("ICC"),item=(2))
+plot(yrbsfoods1000.pcm,type=c("ICC"),item=(3))
+plot(yrbsfoods1000.pcm,type=c("ICC"),item=(4))
+plot(yrbsfoods1000.pcm,type=c("ICC"),item=(5))
+plot(yrbsfoods1000.pcm,type=c("ICC"),item=(6))
+plot(yrbsfoods1000.pcm,type=c("ICC"),item=(7))
+##KURVA INFORMASI ITEM
+plot(yrbsfoods1000.pcm,type=c("IIC"))
+##KURVA INFORMASI ITEM KESELURUHAN
+plot(yrbsfoods1000.pcm,type=c("IIC"),item=(0))
+##UJI KECOCOKAN
+GoF.gpcm(yrbsfoods1000.pcm)
+```
+
+#PCM DENGAN 1PL
+```{r, echo=FALSE}
+yrbsfoods1000.pcm1pl<-gpcm(yrbsfoods1000,constraint="1PL")
+summary(yrbsfoods1000.pcm1pl)
+##PETA ITEM (UTK SETIAP ITEM)
+plot(yrbsfoods1000.pcm1pl,type=c("ICC"),item=(1))
+plot(yrbsfoods1000.pcm1pl,type=c("ICC"),item=(2))
+plot(yrbsfoods1000.pcm1pl,type=c("ICC"),item=(3))
+plot(yrbsfoods1000.pcm1pl,type=c("ICC"),item=(4))
+plot(yrbsfoods1000.pcm1pl,type=c("ICC"),item=(5))
+plot(yrbsfoods1000.pcm1pl,type=c("ICC"),item=(6))
+plot(yrbsfoods1000.pcm1pl,type=c("ICC"),item=(7))
+##KURVA INFORMASI ITEM
+plot(yrbsfoods1000.pcm1pl,type=c("IIC"))
+##KURVA INFORMASI ITEM KESELURUHAN 
+plot(yrbsfoods1000.pcm1pl,type=c("IIC"), item=(0))
+##HASIL UJI KECOCOKAN
+GoF.gpcm(yrbsfoods1000.pcm1pl)
+```
+
+#GPCM
+```{r, echo=FALSE}
+yrbsfoods1000.gpcm<-gpcm(yrbsfoods1000,constraint="gpcm")
+summary(yrbsfoods1000.gpcm)
+##PETA ITEM (UTK SETIAP ITEM)
+plot(yrbsfoods1000.gpcm,type=c("ICC"),item=(1))
+plot(yrbsfoods1000.gpcm,type=c("ICC"),item=(2))
+plot(yrbsfoods1000.gpcm,type=c("ICC"),item=(3))
+plot(yrbsfoods1000.gpcm,type=c("ICC"),item=(4))
+plot(yrbsfoods1000.gpcm,type=c("ICC"),item=(5))
+plot(yrbsfoods1000.gpcm,type=c("ICC"),item=(6))
+plot(yrbsfoods1000.gpcm,type=c("ICC"),item=(7))
+##KURVA INFORMASI ITEM
+plot(yrbsfoods1000.gpcm,type=c("IIC"))
+##KURVA INFORMASI ITEM KESELURUHAN 
+plot(yrbsfoods1000.gpcm,type=c("IIC"), item=c(0))
+##HASIL UJI KECOCOKAN
+GoF.gpcm(yrbsfoods1000.gpcm)
+```
+
+#GRM
+```{r, echo=FALSE}
+yrbsfoods1000.grm<-grm(yrbsfoods1000)
+summary(yrbsfoods1000.grm)
+##PETA ITEM (UTK SETIAP ITEM)
+plot(yrbsfoods1000.grm,type=c("ICC"),item=(1))
+plot(yrbsfoods1000.grm,type=c("ICC"),item=(2))
+plot(yrbsfoods1000.grm,type=c("ICC"),item=(3))
+plot(yrbsfoods1000.grm,type=c("ICC"),item=(4))
+plot(yrbsfoods1000.grm,type=c("ICC"),item=(5))
+plot(yrbsfoods1000.grm,type=c("ICC"),item=(6))
+plot(yrbsfoods1000.grm,type=c("ICC"),item=(7))
+##KURVA INFORMASI ITEM
+plot(yrbsfoods1000.grm,type=c("IIC"))
+##KURVA INFORMASI ITEM KESELURUHAN 
+plot(yrbsfoods1000.grm,type=c("IIC"), item=c(0))
+```
+
+
+#**PERBANDINGAN ANTAR MODEL**
+```{r, echo=FALSE}
+anova.gpcm(yrbsfoods1000.pcm,yrbsfoods1000.gpcm)
+information(yrbsfoods1000.gpcm,c(-10,10))
+information(yrbsfoods1000.grm,c(-10,10))
+```
+
