@@ -1,0 +1,81 @@
+---
+title: "PCA-EFA-CFA"
+author: "Heru Wiryanto"
+date: "August 4, 2016"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+##Principal Components and Factor Analysis
+
+This section covers principal components and factor analysis. The later includes both exploratory and confirmatory methods.
+
+*Principal Components*
+The princomp( ) function produces an unrotated principal component analysis.
+```{r, echo=FALSE}
+library(psych)
+library(nFactors)
+data<-read.csv("MyData.csv", header=TRUE, sep=,)
+Mydata<- na.omit(data)
+attach(Mydata)
+# Pricipal Components Analysis
+# entering raw data and extracting PCs 
+# from the correlation matrix 
+fit <- princomp(Mydata, cor=TRUE)
+summary(fit) # print variance accounted for
+```
+
+##SCREE PLOT DAN BIPLOT
+```{r, echo=FALSE}
+loadings(fit) # pc loadings 
+plot(fit,type="lines") # scree plot
+biplot(fit)
+```
+
+# PRINCIPAL AXIS FACTOR ANALYSIS
+- Varimax Rotated Principal Components
+- retaining 5 components 
+```{r, echo=FALSE}
+library(psych)
+fit <- princomp(Mydata, nfactors=3, rotation="varimax")
+fit # print results
+```
+mydata can be a raw data matrix or a covariance matrix. Pairwise deletion of missing data is used. rotate can "none", "varimax", "quatimax", "promax", "oblimin", "simplimax", or "cluster" .
+
+#Exploratory Factor Analysis
+- The factanal( ) function produces maximum likelihood factor analysis.
+- Maximum Likelihood Factor Analysis
+- entering raw data and extracting 3 factors, 
+- with varimax rotation 
+```{r, echo=FALSE}
+fit1 <- factanal(Mydata, 3, rotation="varimax")
+print(fit1, digits=2, cutoff=.3, sort=TRUE)
+# plot factor 1 by factor 2 
+load <- fit1$loadings[,1:2] 
+plot(load,type="n") # set up plot 
+text(load,labels=names(Mydata),cex=.7) # add variable names
+```
+- The rotation= options include "varimax", "promax", and "none". Add the option scores="regression" or "Bartlett" to produce factor scores. Use the covmat= option to enter a correlation or covariance matrix directly. If entering a covariance matrix, include the option n.obs=.  The factor.pa( ) function in the psych package offers a number of factor analysis related functions, including principal axis factoring.
+
+# Determine Number of Factors to Extract
+A crucial decision in exploratory factor analysis is how many factors to extract. The nFactors package offer a suite of functions to aid in this decision. Details on this methodology can be found in a PowerPoint presentation by Raiche, Riopel, and Blais. Of course, any factor solution must be interpretable to be useful.
+```{r, echo=FALSE}
+library(nFactors)
+ev <- eigen(cor(Mydata)) # get eigenvalues
+ap <- parallel(subject=nrow(Mydata),var=ncol(Mydata),
+               rep=100,cent=.05)
+nS <- nScree(x=ev$values, aparallel=ap$eigen$qevpea)
+plotnScree(nS)
+```
+
+#Going Further
+The FactoMineR package offers a large number of additional functions for exploratory factor analysis. This includes the use of both quantitative and qualitative variables, as well as the inclusion of supplimentary variables and observations. Here is an example of the types of graphs that you can create with this package.
+
+PCA Variable Factor Map 
+```{r, echo=FALSE}
+library(FactoMineR)
+result <- PCA(Mydata) # graphs generated automatically
+```
